@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FoodVerse AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f7f1e3;--card:#ffffff;--ink:#2b2e2c;--mut:#625f55;--line:#e3d9c0;--g:#2e7d3f;--gs:#e1efdc;--amb:#d98a00;--ambs:#fff0cc;--ambi:#5a3a00;
+--h:"Fraunces",Georgia,serif;--b:"Figtree","Segoe UI",system-ui,sans-serif;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1a1c17;--card:#242820;--ink:#eceee6;--mut:#aeb2a2;--line:#3a4033;--g:#6fc27f;--gs:#243a28;--amb:#f0b13a;--ambs:#3d3014;--ambi:#ffe2a0;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1a1c17;--card:#242820;--ink:#eceee6;--mut:#aeb2a2;--line:#3a4033;--g:#6fc27f;--gs:#243a28;--amb:#f0b13a;--ambs:#3d3014;--ambi:#ffe2a0;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 1.02rem/1.55 var(--b)}
+h1,h2,h3{font-family:var(--h);margin:0;line-height:1.1}
+p{margin:0 0 .8em}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--amb);outline-offset:2px}
+.wrap{max-width:920px;margin:0 auto;padding:0 18px}
+nav{position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);border-bottom:1px solid var(--line);z-index:5}
+nav .wrap{display:flex;align-items:center;gap:6px;min-height:58px;flex-wrap:wrap}
+.logo{font:800 1.3rem var(--h);color:var(--g);margin-right:auto;background:none;border:0;cursor:pointer;padding:0}
+.nl{background:none;border:0;padding:8px 12px;border-radius:8px;cursor:pointer;color:var(--mut);font-weight:500}
+.nl[aria-current="page"]{background:var(--gs);color:var(--g);font-weight:600}
+main{padding:36px 0 60px}
+.view{display:none}.view.on{display:block}
+.hero h1{font-size:clamp(2.2rem,6vw,3.8rem);font-weight:800;max-width:15ch}
+.hero p{font-size:1.15rem;color:var(--mut);max-width:50ch;margin-top:14px}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.btn{background:var(--g);color:#fff;border:0;border-radius:12px;padding:13px 22px;font-weight:600;cursor:pointer}
+.btn.sec{background:transparent;color:var(--g);border:1.5px solid var(--g)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));margin-top:30px}
+.grid .card h3{font-size:1.15rem;margin-bottom:6px}
+.grid .card p{color:var(--mut);margin:0;font-size:.95rem}
+.search{display:flex;gap:8px;margin-top:26px;max-width:520px}
+.search input{flex:1}
+input[type=text],select,textarea{background:var(--card);border:1.5px solid var(--line);border-radius:10px;padding:11px 12px;width:100%}
+label{display:block;font-weight:600;font-size:.92rem;margin:14px 0 5px}
+.drop{border:2px dashed var(--line);border-radius:16px;padding:34px;text-align:center;background:var(--card);cursor:pointer;display:block;font-weight:500}
+.drop:hover{border-color:var(--g)}
+.prev{max-width:100%;max-height:300px;border-radius:12px;display:block;margin:0 auto 14px}
+.warn{background:var(--ambs);color:var(--ambi);border-left:5px solid var(--amb);border-radius:8px;padding:12px 14px;font-size:.93rem;margin:14px 0}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1.5px solid var(--line);background:var(--card);border-radius:99px;padding:9px 16px;cursor:pointer;font-weight:500}
+.chip[aria-pressed="true"]{background:var(--g);border-color:var(--g);color:#fff}
+.spin{width:30px;height:30px;border:4px solid var(--gs);border-top-color:var(--g);border-radius:50%;animation:r 1s linear infinite;margin:20px auto}
+@keyframes r{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.spin{animation-duration:3s}}
+.macros{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin:16px 0}
+.macros div{background:var(--gs);border-radius:12px;padding:12px;text-align:center}
+.macros b{display:block;font:700 1.5rem var(--h)}
+.macros span{font-size:.85rem;color:var(--mut)}
+table{width:100%;border-collapse:collapse;font-size:.92rem;margin-top:8px}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line)}
+td.n,th.n{text-align:right}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:700px){.two{grid-template-columns:1fr}}
+.rc h3{font-size:1.3rem}
+.rc .meta{color:var(--mut);font-size:.9rem;margin:4px 0 10px}
+.rc ul,.rc ol{padding-left:20px;margin:6px 0}
+.tag{display:inline-block;background:var(--gs);color:var(--g);font-size:.8rem;font-weight:600;border-radius:99px;padding:2px 10px;margin-right:6px}
+.stack{display:grid;gap:14px;margin-top:18px}
+.hide{display:none}
+.mut{color:var(--mut)}
+</style>
+</head>
+<body>
+<nav><div class="wrap">
+<button class="logo" data-go="home">FoodVerse AI</button>
+<button class="nl" data-go="home">Home</button><button class="nl" data-go="scan">Scan food</button><button class="nl" data-go="recipes">Recipes</button><button class="nl" data-go="meals">My meals</button>
+</div></nav>
+<main><div class="wrap">
+
+<section class="view" id="v-home">
+<div class="hero"><h1>Know what’s on your plate.</h1>
+<p>Snap a photo to identify a dish, see an honest nutrition estimate, or turn the ingredients in your kitchen into dinner.</p>
+<div class="row"><button class="btn" data-go="scan">Scan a food photo</button><button class="btn sec" data-go="recipes">Find a recipe</button></div>
+<div class="search"><input type="text" id="hq" placeholder="Potatoes, tomatoes, rice…" aria-label="Ingredients for a recipe"><button class="btn sec" id="hgo">Search</button></div></div>
+<div class="grid">
+<div class="card"><h3>Food scanner</h3><p>Upload a photo and get likely dishes, then confirm the right one.</p></div>
+<div class="card"><h3>Nutrition analyzer</h3><p>Calories, protein, carbs and fats calculated from ingredients and your portion.</p></div>
+<div class="card"><h3>Recipe generator</h3><p>List what you have, pick a diet and cooking time, and get recipes to cook now.</p></div>
+<div class="card"><h3>Food chat</h3><p>Ask a food question in plain words. Coming in a later version.</p></div>
+</div>
+<p class="warn">This is a front-end prototype. Scan results and recipes are sample data, so no photo is analyzed or uploaded anywhere.</p>
+</section>
+
+<section class="view" id="v-scan">
+<h2>Scan your food</h2>
+<p class="mut" style="margin-top:8px">JPG, PNG or WebP, up to 5 MB.</p>
+<div id="s-up" style="margin-top:18px">
+<label class="drop" for="file" id="dropl" tabindex="0">Choose a food photo</label>
+<input type="file" id="file" accept="image/jpeg,image/png,image/webp" class="hide">
+<p class="warn hide" id="s-err" role="alert"></p>
+<div id="s-pv" class="hide card" style="margin-top:14px"><img class="prev" id="pimg" alt="Preview of the food photo you chose">
+<div class="row" style="justify-content:center;margin:0"><button class="btn" id="analyze">Analyze food</button><button class="btn sec" id="replace">Replace photo</button><button class="btn sec" id="remove">Remove</button></div></div>
+</div>
+<div id="s-load" class="hide card" style="margin-top:14px;text-align:center"><div class="spin"></div><p>Looking at your photo…</p></div>
+<div id="s-res" class="hide stack">
+<div class="card"><h3>Which dish is this?</h3>
+<p class="mut" style="margin-top:6px">The model isn’t certain. Choose the correct dish to continue.</p>
+<div class="chips" id="cands"></div>
+<div class="warn" id="ident">Identification status: needs confirmation. Visible ingredients: flattened rice, onion, peas.</div></div>
+<div class="card hide" id="nut"><h3 id="nt"></h3>
+<label for="grams">Portion size: <span id="gv"></span> g</label>
+<input type="range" id="grams" min="80" max="400" step="10" value="200" style="width:100%">
+<div class="macros" id="mac"></div>
+<table id="tb"></table>
+<p class="warn">Estimates vary with oil, hidden ingredients and the real serving weight. The range shown reflects that. Calculated as the sum of quantity ÷ 100 × nutrient per 100 g for each ingredient, using illustrative reference values, not a verified analysis.</p>
+<div class="row" style="margin-top:0"><button class="btn" id="save">Save this meal</button><button class="btn sec" data-go="recipes">Get a recipe</button></div>
+<p id="saved" class="mut hide" role="status"></p></div>
+</div>
+</section>
+
+<section class="view" id="v-recipes">
+<h2>Recipe generator</h2>
+<div class="two" style="margin-top:14px">
+<div><label for="ing">Ingredients you have</label><textarea id="ing" rows="3" placeholder="potatoes, tomatoes, onions, rice"></textarea></div>
+<div><label for="allg">Allergies or foods to avoid (optional)</label><input type="text" id="allg" placeholder="e.g. peanuts, egg">
+</div></div>
+<div class="two"><div><label for="diet">Diet</label><select id="diet"><option value="any">No preference</option><option value="veg">Vegetarian</option><option value="vegan">Vegan</option></select></div>
+<div><label for="time">Cooking time</label><select id="time"><option value="15">Up to 15 min</option><option value="30" selected>Up to 30 min</option><option value="60">Up to 60 min</option></select></div></div>
+<div class="row"><button class="btn" id="rgo">Find recipes</button></div>
+<p class="warn">Recipes never claim to be allergen-free. Check labels and recipe details yourself if you have a serious allergy.</p>
+<div class="stack" id="rout"></div>
+</section>
+
+<section class="view" id="v-meals">
+<h2>My meals</h2>
+<div class="stack" id="mout"></div>
+</section>
+
+</div></main>
+
+<script>
+const $=id=>document.getElementById(id);
+const DB={
+poha:{name:"Poha",ing:[["Flattened rice",50,346,6.6,77,1.2],["Peanuts",10,567,25.8,16,49],["Cooking oil",5,884,0,0,100],["Onion and peas",35,57,3,11,.3]]},
+upma:{name:"Upma",ing:[["Semolina",40,360,12.7,73,1.1],["Cooking oil",6,884,0,0,100],["Onion and vegetables",40,60,2,12,.3],["Water and spices",14,0,0,0,0]]}};
+const R=[
+{n:"Quick vegetable rice",t:25,d:"vegan",ing:["rice","tomato","onion","potato"],opt:["peas","cumin"],s:2,steps:["Rinse 1 cup rice and set aside.","Fry 1 sliced onion, then add 2 diced tomatoes and 1 diced potato.","Add rice, 2 cups water and salt. Cover and cook for 15 minutes."]},
+{n:"Jeera aloo with tomato",t:20,d:"vegan",ing:["potato","tomato","cumin","onion"],opt:["coriander"],s:2,steps:["Boil and cube 3 potatoes.","Sizzle 1 tsp cumin in oil, then add onion and tomato.","Toss in the potatoes with salt and cook for 5 minutes."]},
+{n:"Tomato rasam rice",t:30,d:"vegan",ing:["rice","tomato","pepper","tamarind"],opt:["curry leaves"],s:3,steps:["Cook rice until soft.","Simmer crushed tomatoes with tamarind, pepper and salt for 10 minutes.","Pour the rasam over the rice and serve hot."]},
+{n:"Paneer onion tomato curry",t:30,d:"veg",ing:["paneer","onion","tomato"],opt:["rice","cream"],s:2,steps:["Fry onions until golden and add tomatoes.","Add spices and 1 cup water, then simmer for 10 minutes.","Stir in cubed paneer and cook for 5 minutes."]},
+{n:"Egg fried rice",t:15,d:"any",ing:["rice","egg","onion"],opt:["peas","soy sauce"],s:2,steps:["Scramble 2 eggs and set aside.","Stir-fry onion, then add cooked rice and soy sauce.","Fold the eggs back in and serve."]}];
+const rk={vegan:0,veg:1,any:2};
+const views=["home","scan","recipes","meals"];
+function go(v){views.forEach(x=>{$("v-"+x).classList.toggle("on",x===v)});document.querySelectorAll(".nl").forEach(b=>{if(b.dataset.go===v)b.setAttribute("aria-current","page");else b.removeAttribute("aria-current")});if(v==="meals")showMeals();window.scrollTo(0,0)}
+document.addEventListener("click",e=>{const g=e.target.closest("[data-go]");if(g)go(g.dataset.go)});
+/* scanner */
+let cur=null,meals=[];
+try{meals=JSON.parse(localStorage.getItem("fv_meals")||"[]")}catch(e){meals=[]}
+function err(m){const x=$("s-err");x.textContent=m;x.classList.toggle("hide",!m)}
+$("dropl").addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();$("file").click()}});
+$("file").addEventListener("change",e=>{const f=e.target.files[0];err("");if(!f)return;
+if(!["image/jpeg","image/png","image/webp"].includes(f.type))return err("Unsupported file type. Choose a JPG, PNG or WebP image.");
+if(f.size>5*1024*1024)return err("That file is over 5 MB. Choose a smaller photo.");
+const r=new FileReader();r.onload=()=>{$("pimg").src=r.result;$("s-pv").classList.remove("hide");$("dropl").classList.add("hide");$("s-res").classList.add("hide")};r.readAsDataURL(f)});
+function reset(){$("file").value="";$("s-pv").classList.add("hide");$("dropl").classList.remove("hide");$("s-res").classList.add("hide")}
+$("remove").onclick=reset;$("replace").onclick=()=>$("file").click();
+$("analyze").onclick=()=>{$("s-pv").classList.add("hide");$("s-load").classList.remove("hide");setTimeout(()=>{$("s-load").classList.add("hide");$("s-pv").classList.remove("hide");$("s-res").classList.remove("hide");cur=null;$("nut").classList.add("hide");
+$("cands").innerHTML=[["poha","Poha · 82%"],["upma","Upma · 14%"]].map(c=>`<button class="chip" aria-pressed="false" data-d="${c[0]}">${c[1]}</button>`).join("");$("saved").classList.add("hide")},1300)};
+$("cands").addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;cur=b.dataset.d;document.querySelectorAll("#cands .chip").forEach(c=>c.setAttribute("aria-pressed",c===b));$("ident").textContent="Confirmed by you: "+DB[cur].name+". Portion and ingredients below are assumptions you can adjust.";$("nut").classList.remove("hide");calc()});
+$("grams").oninput=calc;
+function calc(){if(!cur)return;const g=+$("grams").value,k=g/100;$("gv").textContent=g;$("nt").textContent=DB[cur].name+": nutrition estimate";
+let t=[0,0,0,0],rows="<tr><th>Ingredient</th><th class='n'>Grams</th><th class='n'>kcal</th></tr>";
+DB[cur].ing.forEach(i=>{const q=i[1]*k,f=q/100;const v=[i[2]*f,i[3]*f,i[4]*f,i[5]*f];v.forEach((x,j)=>t[j]+=x);rows+=`<tr><td>${i[0]}</td><td class="n">${q.toFixed(0)}</td><td class="n">${v[0].toFixed(0)}</td></tr>`});
+$("tb").innerHTML=rows;const lo=Math.round(t[0]*.8/10)*10,hi=Math.round(t[0]*1.2/10)*10;
+$("mac").innerHTML=`<div><b>${Math.round(t[0])}</b><span>kcal (range ${lo}-${hi})</span></div><div><b>${t[1].toFixed(1)} g</b><span>protein</span></div><div><b>${t[2].toFixed(1)} g</b><span>carbs</span></div><div><b>${t[3].toFixed(1)} g</b><span>fat</span></div>`;
+cur_res={dish:DB[cur].name,g,kcal:Math.round(t[0]),p:t[1].toFixed(1),c:t[2].toFixed(1),f:t[3].toFixed(1)}}
+let cur_res=null;
+$("save").onclick=()=>{if(!cur_res)return;meals.unshift({...cur_res,at:new Date().toLocaleString()});try{localStorage.setItem("fv_meals",JSON.stringify(meals))}catch(e){}$("saved").textContent="Saved. Find it under My meals.";$("saved").classList.remove("hide")};
+function showMeals(){const o=$("mout");o.innerHTML="";if(!meals.length){o.innerHTML='<div class="card"><p class="mut">No meals saved yet. Scan a food photo and save the result to see it here.</p><button class="btn" data-go="scan">Scan food</button></div>';return}
+meals.forEach(m=>{const d=document.createElement("div");d.className="card";d.innerHTML=`<h3></h3><p class="mut"></p>`;d.children[0].textContent=m.dish+" · "+m.g+" g";d.children[1].textContent=`${m.kcal} kcal · ${m.p} g protein · ${m.c} g carbs · ${m.f} g fat · ${m.at}`;o.appendChild(d)})}
+/* recipes */
+const norm=s=>s.toLowerCase().split(/[,\n]+/).map(x=>x.trim().replace(/(oes|es|s)$/,"")).filter(Boolean);
+function find(){const have=norm($("ing").value),avoid=norm($("allg").value),diet=$("diet").value,tm=+$("time").value;
+const out=R.filter(r=>r.t<=tm&&(diet==="any"||(diet==="vegan"?r.d==="vegan":r.d!=="any"))&&!avoid.some(a=>r.ing.concat(r.opt).some(i=>i.includes(a)||a.includes(i)))).map(r=>({r,m:r.ing.filter(i=>have.some(h=>i.includes(h)||h.includes(i)))})).filter(x=>!have.length||x.m.length).sort((a,b)=>b.m.length-a.m.length);
+const o=$("rout");o.innerHTML="";if(!out.length){o.innerHTML='<div class="card"><p>No matching recipes. Try more ingredients, a longer cooking time or fewer restrictions.</p></div>';return}
+out.forEach(({r,m})=>{const d=document.createElement("div");d.className="card rc";const miss=r.ing.filter(i=>!m.includes(i));
+d.innerHTML=`<h3></h3><p class="meta"></p><p><b>You have:</b> <span class="h1"></span></p><p><b>Still needed:</b> <span class="h2"></span></p><p><b>Optional:</b> <span class="h3"></span></p><ol></ol><p class="mut" style="font-size:.88rem">Nutrition: not calculated yet.</p>`;
+d.querySelector("h3").textContent=r.n;d.querySelector(".meta").textContent=`${r.t} min · serves ${r.s} · ${r.d==="vegan"?"vegan":r.d==="veg"?"vegetarian":"contains egg"}`;
+d.querySelector(".h1").textContent=m.join(", ")||"none matched";d.querySelector(".h2").textContent=miss.join(", ")||"nothing";d.querySelector(".h3").textContent=r.opt.join(", ");
+d.querySelector("ol").innerHTML=r.steps.map(s=>"<li>"+s+"</li>").join("");o.appendChild(d)})}
+$("rgo").onclick=find;
+$("hgo").onclick=()=>{$("ing").value=$("hq").value;go("recipes");find()};
+go("home");
+</script>
+</body>
+</html>
